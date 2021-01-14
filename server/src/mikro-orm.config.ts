@@ -1,5 +1,6 @@
 import { MikroORM } from "@mikro-orm/core";
 import { Post } from "./entities/Post";
+import { User } from "./entities/User";
 import { __prod__ } from "./constants";
 import path from "path";
 
@@ -8,7 +9,7 @@ export default {
     path: path.join(__dirname, "./migrations"),
     pattern: /^[\w-]+\d+\.[tj]s$/,
   },
-  entities: [Post],
+  entities: [Post, User],
   dbName: "songc21",
   type: "postgresql",
   debug: !__prod__,
