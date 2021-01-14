@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import { HelloResolver } from "./resolvers/hello";
 import { MikroORM } from "@mikro-orm/core";
+import { PostResolver } from "./resolvers/post";
 import { __prod__ } from "./constants";
 import { buildSchema } from "type-graphql";
 import express from "express";
@@ -17,9 +18,10 @@ const main = async () => {
   //apollo
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [HelloResolver, PostResolver],
       validate: false,
     }),
+    context: () => ({ em: orm.em }),
   });
 
   apolloServer.applyMiddleware({ app });
