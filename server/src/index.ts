@@ -1,15 +1,35 @@
+import "reflect-metadata";
+
+import { ApolloServer } from "apollo-server-express";
+import { HelloResolver } from "./resolvers/hello";
 import { MikroORM } from "@mikro-orm/core";
 import { __prod__ } from "./constants";
+import { buildSchema } from "type-graphql";
+import express from "express";
 import microConfig from "./mikro-orm.config";
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
-   await orm.getMigrator().up();
-  // const post = orm.em.create(Post, { title: "test post" });
-  // await orm.em.persistAndFlush(post);
-  // console.log("__________________________sql__________");
-  // await orm.em.nativeInsert(Post, { title: "my first post 2" });
-  // const post = new Post('my first post')
+  await orm.getMigrator().up();
+
+  const app = express();
+
+  //apollo
+  const apolloServer = new ApolloServer({
+    schema: await buildSchema({
+      resolvers: [HelloResolver],
+      validate: false,
+    }),
+  });
+
+  apolloServer.applyMiddleware({ app });
+
+  app.get("/", (_, res) => {
+    res.send("hello");
+  });
+  app.listen(4000, () => {
+    console.log("server songc localhost: 4000");
+  });
 };
 
 main().catch((err) => {
