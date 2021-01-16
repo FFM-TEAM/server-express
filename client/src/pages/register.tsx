@@ -5,25 +5,12 @@ import InputField from "../components/InputField";
 import React from "react";
 import Wrapper from "../components/Wrapper";
 import { useMutation } from "urql";
+import { useRegisterMutation } from "../generated/graphql";
 
 interface Props {}
 
-const REGISTER_MUT = `
-mutation Register($username: String!, $password:String!) {
-  register(options: { username: $username, password: $password }) {
-    errors {
-      field
-      message
-    }
-    user {
-      id
-      username
-    }
-  }
-}
-`;
 function Register(props: Props) {
-  const [, register] = useMutation(REGISTER_MUT);
+  const [, register] = useRegisterMutation()
 
   return (
     <Wrapper>
@@ -31,6 +18,7 @@ function Register(props: Props) {
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values) => {
           const response = await register(values);
+          response.data.register?.user?.id
         }}
       >
         {({ isSubmitting }) => (
