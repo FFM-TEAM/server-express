@@ -9,6 +9,7 @@ import { UserResolver } from "./resolvers/user";
 import { __prod__ } from "./constants";
 import { buildSchema } from "type-graphql";
 import connectRedis from "connect-redis";
+import cors from "cors";
 import express from "express";
 import microConfig from "./mikro-orm.config";
 import redis from "redis";
@@ -24,7 +25,13 @@ const main = async () => {
   // DOCS https://github.com/tj/connect-redis
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
-
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+  
   app.use(
     session({
       name: "qid",
@@ -52,7 +59,10 @@ const main = async () => {
     context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: false,
+  });
 
   app.get("/", (_, res) => {
     res.send("hello");
