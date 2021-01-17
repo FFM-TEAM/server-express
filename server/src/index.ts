@@ -1,12 +1,13 @@
 import "reflect-metadata";
 
+import { COOKIE_NAME, __prod__ } from "./constants";
+
 import { ApolloServer } from "apollo-server-express";
 import { HelloResolver } from "./resolvers/hello";
 import { MikroORM } from "@mikro-orm/core";
 import { MyContext } from "./types";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
-import { __prod__ } from "./constants";
 import { buildSchema } from "type-graphql";
 import connectRedis from "connect-redis";
 import cors from "cors";
@@ -34,7 +35,7 @@ const main = async () => {
   
   app.use(
     session({
-      name: "qid",
+      name: COOKIE_NAME,
       store: new RedisStore({
         client: redisClient,
         disableTouch: true,
