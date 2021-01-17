@@ -4,9 +4,11 @@ import { Form, Formik } from "formik";
 import InputField from "../components/InputField";
 import React from "react";
 import Wrapper from "../components/Wrapper";
+import { createUrqlClient } from "../utils/createUrqlClient";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useLoginMutation } from "../generated/graphql";
 import { useRouter } from "next/router";
+import { withUrqlClient } from "next-urql";
 
 function Login() {
   const router = useRouter();
@@ -55,4 +57,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default withUrqlClient(createUrqlClient)(Login);
