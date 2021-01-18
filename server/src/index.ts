@@ -32,7 +32,7 @@ const main = async () => {
       credentials: true,
     })
   );
-  
+
   app.use(
     session({
       name: COOKIE_NAME,
