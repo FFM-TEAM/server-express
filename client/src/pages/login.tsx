@@ -1,7 +1,8 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 
 import InputField from "../components/InputField";
+import NextLink from "next/link";
 import React from "react";
 import Wrapper from "../components/Wrapper";
 import { createUrqlClient } from "../utils/createUrqlClient";
@@ -42,6 +43,11 @@ function Login() {
                 type="password"
               />
             </Box>
+            <Flex mt={2}>
+              <NextLink href="/forgot-password">
+                <Link ml="auto">forgot password ?</Link>
+              </NextLink>
+            </Flex>
             <Button
               mt={4}
               type="submit"

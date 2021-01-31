@@ -12,10 +12,12 @@ import { useChangePasswordMutation } from "../../generated/graphql";
 import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 
-const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
+const ChangePassword: NextPage<{ token?: string }> = ({ token }) => {
   const [, changePassword] = useChangePasswordMutation();
   const router = useRouter();
   const [tokenError, setTokenError] = useState("");
+
+  if (!token) return null;
   return (
     <Wrapper variant="small">
       <Formik
@@ -56,7 +58,13 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
                 </NextLink>
               </Flex>
             ) : null}
-            <Button mt={4} type="submit" isLoading={isSubmitting} color="teal">
+            <Button
+              colorScheme="teal"
+              mt={4}
+              type="submit"
+              isLoading={isSubmitting}
+              color="teal"
+            >
               change password
             </Button>
           </Form>
