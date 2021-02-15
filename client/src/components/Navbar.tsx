@@ -44,7 +44,7 @@ function Navbar() {
     );
   }
   return (
-    <Flex background="tomato" p={4}>
+    <Flex zIndex={1} background="tomato" p={4} top={0} position="sticky">
       <Box ml="auto">{body}</Box>
     </Flex>
   );

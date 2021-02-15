@@ -5,10 +5,22 @@ import {
   MeQuery,
   RegisterMutation,
 } from "../generated/graphql";
-import { dedupExchange, fetchExchange } from "urql";
-
+import { dedupExchange, Exchange, fetchExchange } from "urql";
+import { pipe, tap } from "wonka";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { cacheExchange } from "@urql/exchange-graphcache";
+import Router from "next/router";
+
+const errorExchange: Exchange = ({ forward }) => (ops$) => {
+  return pipe(
+    forward(ops$),
+    tap(({ error }) => {
+      if (error?.message.includes("not authenticated")) {
+        Router.replace("/login");
+      }
+    })
+  );
+};
 
 // refer to https://formidable.com/open-source/urql/docs/advanced/server-side-rendering/
 export const createUrqlClient = (ssrExchange: any) => ({
@@ -64,6 +76,7 @@ export const createUrqlClient = (ssrExchange: any) => ({
         },
       },
     }),
+    errorExchange,
     ssrExchange,
     fetchExchange,
   ],
