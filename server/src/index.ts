@@ -16,17 +16,20 @@ import cors from "cors";
 import { createConnection } from "typeorm";
 import express from "express";
 import session from "express-session";
+import path from "path";
 
 const main = async () => {
-  await createConnection({
+  const conn = await createConnection({
     type: "postgres",
     database: "songc21",
     username: "songc21",
     password: "songc21",
     logging: true,
     synchronize: true,
+    migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User],
   });
+  await conn.runMigrations();
 
   const app = express();
 
